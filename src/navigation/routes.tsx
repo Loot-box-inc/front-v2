@@ -7,6 +7,7 @@ import type { ComponentType, JSX } from "react";
 // import { TONConnectPage } from "@/pages/TONConnectPage/TONConnectPage";
 import { HomePage } from "@/pages/HomePage/HomePage";
 import TasksPage from "@/pages/TasksPage/TasksPage";
+import ClaimPage from "@/pages/ClaimPage/ClaimPage";
 
 interface Route {
   path: string;
@@ -18,6 +19,7 @@ interface Route {
 export const routes: Route[] = [
   { path: "/", Component: HomePage },
   { path: "/tasks", Component: TasksPage },
+  { path: "/claim", Component: ClaimPage },
   // { path: "/init-data", Component: InitDataPage, title: "Init Data" },
   // { path: "/theme-params", Component: ThemeParamsPage, title: "Theme Params" },
   // {
