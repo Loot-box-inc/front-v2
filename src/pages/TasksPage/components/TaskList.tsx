@@ -7,7 +7,7 @@ import { initInitData, initUtils } from "@tma.js/sdk";
 import { supabase } from "../../../supabase";
 
 interface TasksListProps {
-  onShare: () => void;
+  onShare: (arg0: boolean) => void;
 }
 
 export const TasksList = ({ onShare }: TasksListProps) => {
@@ -37,6 +37,8 @@ export const TasksList = ({ onShare }: TasksListProps) => {
         `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.id}`,
         "Look! Some cool app here!"
       );
+
+      onShare(true);
     } catch (error) {
       console.error(error);
     }
@@ -54,11 +56,11 @@ export const TasksList = ({ onShare }: TasksListProps) => {
         />
         <ActionItem
           text="2. Upload a video with you and your friends"
-          actionButton={<ActionButton onShare={onShare}>Upload</ActionButton>}
+          actionButton={<ActionButton onShare={() => {}}>Upload</ActionButton>}
         />
         <ActionItem
           text="3. Join our group"
-          actionButton={<ActionButton onShare={onShare}>Join</ActionButton>}
+          actionButton={<ActionButton onShare={() => {}}>Join</ActionButton>}
         />
       </div>
     </>
