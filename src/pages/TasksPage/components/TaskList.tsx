@@ -1,8 +1,6 @@
-// @ts-nocheck
-
 import { ActionButton } from "@/pages/TasksPage/components/ActionButton";
 import { ActionItem } from "@/pages/TasksPage/components/ActionItem";
-import { initInitData, initUtils } from "@tma.js/sdk";
+import { initInitData, initUtils } from "@telegram-apps/sdk";
 
 import { supabase } from "../../../supabase";
 
@@ -28,8 +26,8 @@ export const TasksList = ({ onShare }: TasksListProps) => {
       await supabase
         .from("lootboxes")
         .update({
-          sender_id: initData.user.id,
-          parent: initData.startParam, // TODO revert
+          sender_id: initData?.user?.id,
+          parent: initData?.startParam, // TODO revert
         }) // пишем себя сендером = берем лутбокс
         .eq("id", lootbox.id);
 

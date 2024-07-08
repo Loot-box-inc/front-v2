@@ -1,6 +1,6 @@
-import { classNames, useUtils } from "@tma.js/sdk-react";
 import { type FC, type MouseEventHandler, useCallback } from "react";
 import { Link as RouterLink, type LinkProps } from "react-router-dom";
+import { classNames, useUtils } from "@telegram-apps/sdk-react";
 
 import "./Link.css";
 
