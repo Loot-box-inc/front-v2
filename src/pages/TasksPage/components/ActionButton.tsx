@@ -1,14 +1,20 @@
 interface ActionButtonProps {
   children: string;
   onShare: () => void;
+  bgColor?: string;
 }
 
-export const ActionButton = ({ children, onShare }: ActionButtonProps) => {
+export const ActionButton = ({
+  children,
+  onShare,
+  bgColor,
+}: ActionButtonProps) => {
+  const styles = `${
+    bgColor || "bg-blue"
+  } rounded h-10 w-20 text-center flex items-center justify-center`;
+
   return (
-    <a
-      onClick={onShare}
-      className="bg-blue rounded h-10 w-20 text-center  flex items-center justify-center"
-    >
+    <a onClick={onShare} className={styles}>
       <div>{children}</div>
     </a>
   );

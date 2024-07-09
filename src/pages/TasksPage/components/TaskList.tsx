@@ -54,11 +54,19 @@ export const TasksList = ({ onShare }: TasksListProps) => {
         />
         <ActionItem
           text="2. Upload a video with you and your friends"
-          actionButton={<ActionButton onShare={() => {}}>Upload</ActionButton>}
+          actionButton={
+            <ActionButton bgColor="bg-gray" onShare={() => {}}>
+              Upload
+            </ActionButton>
+          }
         />
         <ActionItem
           text="3. Join our group"
-          actionButton={<ActionButton onShare={() => {}}>Join</ActionButton>}
+          actionButton={
+            <ActionButton bgColor="bg-gray" onShare={() => {}}>
+              Join
+            </ActionButton>
+          }
         />
       </div>
     </>
