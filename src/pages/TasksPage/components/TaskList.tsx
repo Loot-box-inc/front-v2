@@ -47,7 +47,7 @@ export const TasksList = ({ onShare }: TasksListProps) => {
       <h1 className="-mt-20 pb-5 text-center font-bold text-lg">
         Choose from one of the tasks below:
       </h1>
-      <div className="px-12">
+      <div className="px-6">
         <ActionItem
           text="1. Share a lootbox with a friend/s"
           actionButton={<ActionButton onShare={_onShare}>Send</ActionButton>}
