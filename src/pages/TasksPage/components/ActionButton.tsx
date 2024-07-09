@@ -11,7 +11,7 @@ export const ActionButton = ({
 }: ActionButtonProps) => {
   const styles = `${
     bgColor || "bg-blue"
-  } rounded h-10 w-20 text-center flex items-center justify-center`;
+  } rounded h-10 w-20 text-center flex items-center justify-center border`;
 
   return (
     <a onClick={onShare} className={styles}>
