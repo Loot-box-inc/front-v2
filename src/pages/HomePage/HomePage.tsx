@@ -55,8 +55,7 @@ export function HomePage() {
 
       const { data } = lootbox;
 
-      // @ts-expect-error - to lazy to fix now
-      const { sender_id, parent } = data[0];
+      const { sender_id, parent } = data![0];
 
       await supabase
         .from("lootboxes")
