@@ -14,7 +14,6 @@ export function HomePage() {
   const [lootboxes, setLootboxes] = useState([]);
   const [steps, setSteps] = useState("");
   const [startParam, setStartParam] = useState("");
-  const [ltbx, setLtbx] = useState({});
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
   const [err, setErr] = useState("");
@@ -25,29 +24,18 @@ export function HomePage() {
     const run = async () => {
       // get startParam lootbox - parent and sender
       try {
-        const [lootbox, usersOpenedLootboxes, usersSendedLootboxes] =
-          await Promise.all([
-            supabase
-              .from("lootboxes")
-              .select()
-              .eq("uuid", initData?.startParam as string),
-            supabase
-              .from("lootboxes")
-              .select("balance")
-              .eq("receiver_id", initData?.user?.id as number),
-            supabase
-              .from("lootboxes")
-              .select("uuid")
-              .eq("sender_id", initData?.user?.id as number),
-            supabase.from("users").upsert({
-              telegram_id: initData?.user?.id as number,
-              username: initData?.user?.username as string,
-              first_name: initData?.user?.firstName as string,
-              last_name: initData?.user?.lastName as string,
-            }),
-          ]);
+        const [usersOpenedLootboxes, usersSendedLootboxes] = await Promise.all([
+          supabase
+            .from("lootboxes")
+            .select("balance")
+            .eq("receiver_id", initData?.user?.id as number),
+          supabase
+            .from("lootboxes")
+            .select("uuid")
+            .eq("sender_id", initData?.user?.id as number),
+        ]);
         setLootboxes(usersOpenedLootboxes.data as []);
-        setLtbx(lootbox);
+
         setStartParam(initData?.startParam as string);
         setSteps("1");
         if (
@@ -60,14 +48,7 @@ export function HomePage() {
           return;
         }
         setSteps("12");
-        const { data } = lootbox;
 
-        const { sender_id, parent } = data![0];
-
-        await supabase
-          .from("lootboxes")
-          .update({ receiver_id: sender_id }) // sender of current lootbox
-          .eq("uuid", parent as string); // условие - parent lootbox
         setSteps("123");
         if (!usersOpenedLootboxes?.data?.length) {
           setLootboxesCount(0);
@@ -111,6 +92,39 @@ export function HomePage() {
     run();
   }, []);
 
+  useEffect(() => {
+    const run = async () => {
+      const lootbox = await supabase
+        .from("lootboxes")
+        .select()
+        .eq("uuid", initData?.startParam as string);
+
+      const { data } = lootbox;
+
+      const { sender_id, parent } = data![0];
+
+      await supabase
+        .from("lootboxes")
+        .update({ receiver_id: sender_id }) // sender of current lootbox
+        .eq("uuid", parent as string); // условие - parent lootbox
+    };
+
+    if (initData?.startParam) run();
+  }, []);
+
+  useEffect(() => {
+    const run = async () => {
+      await supabase.from("users").upsert({
+        telegram_id: initData?.user?.id as number,
+        username: initData?.user?.username as string,
+        first_name: initData?.user?.firstName as string,
+        last_name: initData?.user?.lastName as string,
+      });
+    };
+
+    run();
+  }, []);
+
   // ADD SPINNER HERE
 
   if (isLoading)
@@ -125,7 +139,6 @@ export function HomePage() {
         <div>ERROR: {JSON.stringify(err)}</div>
         <div>STEPS: {JSON.stringify(steps)}</div>
 
-        <div>LTBX: {JSON.stringify(ltbx)}</div>
         <div>STARTPARAM: {JSON.stringify(startParam)}</div>
       </>
     );
