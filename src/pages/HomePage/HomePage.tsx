@@ -104,10 +104,14 @@ export function HomePage() {
   // ADD SPINNER HERE
 
   if (isLoading)
-    return `Loading...
-  ${JSON.stringify(lootboxes)}
-    ${JSON.stringify(isLoading)}
-  `;
+    return (
+      <>
+        <div>Loading...</div>
+        <div>${JSON.stringify(lootboxes)}</div>
+        <div>${JSON.stringify(isLoading)}</div>
+        <div>${JSON.stringify(LOOT)}</div>
+      </>
+    );
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
