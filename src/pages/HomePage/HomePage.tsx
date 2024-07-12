@@ -14,79 +14,90 @@ export function HomePage() {
   const [lootboxes, setLootboxes] = useState([]);
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
+  const [err, setErr] = useState("");
 
   // TODO avoid unnecceary calls if receiver_id is not NULL already
 
   useEffect(() => {
     const run = async () => {
       // get startParam lootbox - parent and sender
+      try {
+        const [lootbox, usersOpenedLootboxes, usersSendedLootboxes] =
+          await Promise.all([
+            supabase
+              .from("lootboxes")
+              .select()
+              .eq("uuid", initData?.startParam as string),
+            supabase
+              .from("lootboxes")
+              .select("balance")
+              .eq("receiver_id", initData?.user?.id as number),
+            supabase
+              .from("lootboxes")
+              .select("uuid")
+              .eq("sender_id", initData?.user?.id as number),
+            supabase.from("users").upsert({
+              telegram_id: initData?.user?.id as number,
+              username: initData?.user?.username as string,
+              first_name: initData?.user?.firstName as string,
+              last_name: initData?.user?.lastName as string,
+            }),
+          ]);
+        setLootboxes(usersOpenedLootboxes.data as []);
+        if (
+          usersSendedLootboxes.data
+            ?.map((i) => i.uuid)
+            .includes(initData?.startParam as string)
+        ) {
+          setIsSendersLootbox(true);
+          setIsLoading(false);
+          return;
+        }
 
-      const [lootbox, usersOpenedLootboxes, usersSendedLootboxes] =
-        await Promise.all([
-          supabase
-            .from("lootboxes")
-            .select()
-            .eq("uuid", initData?.startParam as string),
-          supabase
-            .from("lootboxes")
-            .select("balance")
-            .eq("receiver_id", initData?.user?.id as number),
-          supabase
-            .from("lootboxes")
-            .select("uuid")
-            .eq("sender_id", initData?.user?.id as number),
-          supabase.from("users").upsert({
-            telegram_id: initData?.user?.id as number,
-            username: initData?.user?.username as string,
-            first_name: initData?.user?.firstName as string,
-            last_name: initData?.user?.lastName as string,
-          }),
-        ]);
-      setLootboxes(usersOpenedLootboxes.data as []);
-      if (
-        usersSendedLootboxes.data
-          ?.map((i) => i.uuid)
-          .includes(initData?.startParam as string)
-      ) {
-        setIsSendersLootbox(true);
+        const { data } = lootbox;
+
+        const { sender_id, parent } = data![0];
+
+        await supabase
+          .from("lootboxes")
+          .update({ receiver_id: sender_id }) // sender of current lootbox
+          .eq("uuid", parent as string); // условие - parent lootbox
+
+        if (!usersOpenedLootboxes?.data?.length) {
+          setLootboxesCount(0);
+          setUSDT(0);
+          setLOOT(0);
+          setIsLoading(false);
+          return;
+        }
+
+        setLootboxesCount(usersOpenedLootboxes?.data.length);
+
+        setUSDT(
+          usersOpenedLootboxes?.data
+            .map((i) => i.balance || 0) // Treat null balance as 0
+            .filter((i) => i < 11)
+            .reduce(
+              (accumulator, currentValue) => accumulator + currentValue,
+              0
+            ) // Provide a default value for reduce
+        );
+
+        setLOOT(
+          usersOpenedLootboxes?.data
+            .map((i) => i.balance || 0) // Treat null balance as 0
+            .filter((i) => i > 40)
+            .reduce(
+              (accumulator, currentValue) => accumulator + currentValue,
+              0
+            ) // Provide a default value for reduce
+        );
         setIsLoading(false);
         return;
+      } catch (error) {
+        setErr(error as string);
+        console.error(error);
       }
-
-      const { data } = lootbox;
-
-      const { sender_id, parent } = data![0];
-
-      await supabase
-        .from("lootboxes")
-        .update({ receiver_id: sender_id }) // sender of current lootbox
-        .eq("uuid", parent as string); // условие - parent lootbox
-
-      if (!usersOpenedLootboxes?.data?.length) {
-        setLootboxesCount(0);
-        setUSDT(0);
-        setLOOT(0);
-        setIsLoading(false);
-        return;
-      }
-
-      setLootboxesCount(usersOpenedLootboxes?.data.length);
-
-      setUSDT(
-        usersOpenedLootboxes?.data
-          .map((i) => i.balance || 0) // Treat null balance as 0
-          .filter((i) => i < 11)
-          .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
-      );
-
-      setLOOT(
-        usersOpenedLootboxes?.data
-          .map((i) => i.balance || 0) // Treat null balance as 0
-          .filter((i) => i > 40)
-          .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
-      );
-      setIsLoading(false);
-      return;
     };
 
     run();
@@ -102,6 +113,8 @@ export function HomePage() {
         <div>isLoading: {JSON.stringify(isLoading)}</div>
         <div>LOOT: {JSON.stringify(LOOT)}</div>
         <div>USDT: {JSON.stringify(USDT)}</div>
+
+        <div>ERROR: {JSON.stringify(err)}`</div>
       </>
     );
 
