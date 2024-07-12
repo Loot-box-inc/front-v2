@@ -99,9 +99,10 @@ export function HomePage() {
     return (
       <>
         <div>Loading...</div>
-        <div>{JSON.stringify(lootboxes)}</div>
-        <div>{JSON.stringify(isLoading)}</div>
-        <div>{JSON.stringify(LOOT)}</div>
+        <div>lootboxes: {JSON.stringify(lootboxes)}</div>
+        <div>isLoading: {JSON.stringify(isLoading)}</div>
+        <div>LOOT: {JSON.stringify(LOOT)}</div>
+        <div>USDT: {JSON.stringify(USDT)}</div>
       </>
     );
 
