@@ -13,6 +13,8 @@ export function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [lootboxes, setLootboxes] = useState([]);
   const [steps, setSteps] = useState("");
+  const [startParam, setStartParam] = useState("");
+  const [ltbx, setLtbx] = useState({});
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
   const [err, setErr] = useState("");
@@ -45,6 +47,8 @@ export function HomePage() {
             }),
           ]);
         setLootboxes(usersOpenedLootboxes.data as []);
+        setLtbx(lootbox);
+        setStartParam(initData?.startParam as string);
         setSteps("1");
         if (
           usersSendedLootboxes.data
@@ -120,6 +124,9 @@ export function HomePage() {
 
         <div>ERROR: {JSON.stringify(err)}</div>
         <div>STEPS: {JSON.stringify(steps)}</div>
+
+        <div>LTBX: {JSON.stringify(ltbx)}</div>
+        <div>STARTPARAM: {JSON.stringify(startParam)}</div>
       </>
     );
 
