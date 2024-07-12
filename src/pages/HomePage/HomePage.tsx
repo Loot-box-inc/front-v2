@@ -77,7 +77,7 @@ export function HomePage() {
           .filter((i) => i > 40)
           .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
       );
-      setIsLoading(false);
+      return setIsLoading(false);
     };
 
     run();
@@ -107,9 +107,9 @@ export function HomePage() {
     return (
       <>
         <div>Loading...</div>
-        <div>${JSON.stringify(lootboxes)}</div>
-        <div>${JSON.stringify(isLoading)}</div>
-        <div>${JSON.stringify(LOOT)}</div>
+        <div>{JSON.stringify(lootboxes)}</div>
+        <div>{JSON.stringify(isLoading)}</div>
+        <div>{JSON.stringify(LOOT)}</div>
       </>
     );
 
