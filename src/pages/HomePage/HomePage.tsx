@@ -12,6 +12,7 @@ export function HomePage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [lootboxes, setLootboxes] = useState([]);
+  const [steps, setSteps] = useState("");
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
   const [err, setErr] = useState("");
@@ -44,6 +45,7 @@ export function HomePage() {
             }),
           ]);
         setLootboxes(usersOpenedLootboxes.data as []);
+        setSteps("1");
         if (
           usersSendedLootboxes.data
             ?.map((i) => i.uuid)
@@ -53,7 +55,7 @@ export function HomePage() {
           setIsLoading(false);
           return;
         }
-
+        setSteps("12");
         const { data } = lootbox;
 
         const { sender_id, parent } = data![0];
@@ -62,7 +64,7 @@ export function HomePage() {
           .from("lootboxes")
           .update({ receiver_id: sender_id }) // sender of current lootbox
           .eq("uuid", parent as string); // условие - parent lootbox
-
+        setSteps("123");
         if (!usersOpenedLootboxes?.data?.length) {
           setLootboxesCount(0);
           setUSDT(0);
@@ -70,9 +72,9 @@ export function HomePage() {
           setIsLoading(false);
           return;
         }
-
+        setSteps("1234");
         setLootboxesCount(usersOpenedLootboxes?.data.length);
-
+        setSteps("12345");
         setUSDT(
           usersOpenedLootboxes?.data
             .map((i) => i.balance || 0) // Treat null balance as 0
@@ -82,7 +84,7 @@ export function HomePage() {
               0
             ) // Provide a default value for reduce
         );
-
+        setSteps("123456");
         setLOOT(
           usersOpenedLootboxes?.data
             .map((i) => i.balance || 0) // Treat null balance as 0
@@ -92,7 +94,9 @@ export function HomePage() {
               0
             ) // Provide a default value for reduce
         );
+        setSteps("1234567");
         setIsLoading(false);
+        setSteps("12345678");
         return;
       } catch (error) {
         setErr(error as string);
@@ -114,7 +118,7 @@ export function HomePage() {
         <div>LOOT: {JSON.stringify(LOOT)}</div>
         <div>USDT: {JSON.stringify(USDT)}</div>
 
-        <div>ERROR: {JSON.stringify(err)}`</div>
+        <div>ERROR: {JSON.stringify(err)}</div>
       </>
     );
 
