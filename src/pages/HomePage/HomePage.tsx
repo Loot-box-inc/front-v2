@@ -35,14 +35,23 @@ export function HomePage() {
             .from("lootboxes")
             .select("uuid")
             .eq("sender_id", initData?.user?.id as number),
+          supabase.from("users").upsert({
+            telegram_id: initData?.user?.id as number,
+            username: initData?.user?.username as string,
+            first_name: initData?.user?.firstName as string,
+            last_name: initData?.user?.lastName as string,
+          }),
         ]);
       setLootboxes(usersOpenedLootboxes.data as []);
       if (
         usersSendedLootboxes.data
           ?.map((i) => i.uuid)
           .includes(initData?.startParam as string)
-      )
+      ) {
         setIsSendersLootbox(true);
+        setIsLoading(false);
+        return;
+      }
 
       const { data } = lootbox;
 
@@ -79,24 +88,6 @@ export function HomePage() {
       );
       setIsLoading(false);
       return;
-    };
-
-    run();
-  }, []);
-
-  useEffect(() => {
-    const run = async () => {
-      try {
-        const { error } = await supabase.from("users").upsert({
-          telegram_id: initData?.user?.id as number,
-          username: initData?.user?.username as string,
-          first_name: initData?.user?.firstName as string,
-          last_name: initData?.user?.lastName as string,
-        });
-        console.error(error);
-      } catch (err) {
-        console.error(err);
-      }
     };
 
     run();
