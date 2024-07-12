@@ -46,7 +46,7 @@ export type Database = {
           ip_address: string | null;
           nickname: string | null;
           phone_number: string | null;
-          telegram_id: string | null;
+          telegram_id: number | null;
         };
         Insert: {
           created_at?: string;
@@ -54,7 +54,7 @@ export type Database = {
           ip_address?: string | null;
           nickname?: string | null;
           phone_number?: string | null;
-          telegram_id?: string | null;
+          telegram_id?: number | null;
         };
         Update: {
           created_at?: string;
@@ -62,7 +62,7 @@ export type Database = {
           ip_address?: string | null;
           nickname?: string | null;
           phone_number?: string | null;
-          telegram_id?: string | null;
+          telegram_id?: number | null;
         };
         Relationships: [];
       };

@@ -62,7 +62,25 @@ export function HomePage() {
     };
 
     run();
-  });
+  }, []);
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const { error } = await supabase.from("users").insert({
+          telegram_id: initData?.user?.id as number,
+          username: initData?.user?.username as string,
+          first_name: initData?.user?.firstName as string,
+          last_name: initData?.user?.lastName as string,
+        });
+        console.error(error);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    run();
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
