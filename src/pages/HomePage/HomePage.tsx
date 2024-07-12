@@ -67,12 +67,15 @@ export function HomePage() {
   useEffect(() => {
     const run = async () => {
       try {
-        const { error } = await supabase.from("users").upsert({
-          telegram_id: initData?.user?.id as number,
-          username: initData?.user?.username as string,
-          first_name: initData?.user?.firstName as string,
-          last_name: initData?.user?.lastName as string,
-        });
+        const { error } = await supabase.from("users").upsert(
+          {
+            telegram_id: initData?.user?.id as number,
+            username: initData?.user?.username as string,
+            first_name: initData?.user?.firstName as string,
+            last_name: initData?.user?.lastName as string,
+          },
+          { onConflict: "telegram_id" }
+        );
         console.error(error);
       } catch (err) {
         console.error(err);
