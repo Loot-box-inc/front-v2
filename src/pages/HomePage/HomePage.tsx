@@ -10,22 +10,36 @@ export function HomePage() {
   const [USDT, setUSDT] = useState(2);
   const [LOOT, setLOOT] = useState(3);
 
+  const [isSendersLootbox, setIsSendersLootbox] = useState(false);
+
   // TODO avoid unnecceary calls if receiver_id is not NULL already
 
   useEffect(() => {
     const run = async () => {
       // get startParam lootbox - parent and sender
 
-      const [lootbox, usersLootboxes] = await Promise.all([
-        supabase
-          .from("lootboxes")
-          .select()
-          .eq("uuid", initData?.startParam as string),
-        supabase
-          .from("lootboxes")
-          .select("balance")
-          .eq("receiver_id", initData?.user?.id as number),
-      ]);
+      const [lootbox, usersOpenedLootboxes, usersSendedLootboxes] =
+        await Promise.all([
+          supabase
+            .from("lootboxes")
+            .select()
+            .eq("uuid", initData?.startParam as string),
+          supabase
+            .from("lootboxes")
+            .select("balance")
+            .eq("receiver_id", initData?.user?.id as number),
+          supabase
+            .from("lootboxes")
+            .select("uuid")
+            .eq("sender_id", initData?.user?.id as number),
+        ]);
+
+      if (
+        usersSendedLootboxes.data
+          ?.map((i) => i.uuid)
+          .includes(initData?.startParam as string)
+      )
+        setIsSendersLootbox(true);
 
       const { data } = lootbox;
 
@@ -37,24 +51,24 @@ export function HomePage() {
         .update({ receiver_id: sender_id }) // sender of current lootbox
         .eq("uuid", parent as string); // условие - parent lootbox
 
-      if (!usersLootboxes?.data?.length) {
+      if (!usersOpenedLootboxes?.data?.length) {
         setLootboxesCount(0);
         setUSDT(0);
         setLOOT(0);
         return;
       }
 
-      setLootboxesCount(usersLootboxes?.data.length);
+      setLootboxesCount(usersOpenedLootboxes?.data.length);
 
       setUSDT(
-        usersLootboxes?.data
+        usersOpenedLootboxes?.data
           .map((i) => i.balance || 0) // Treat null balance as 0
           .filter((i) => i < 11)
           .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
       );
 
       setLOOT(
-        usersLootboxes?.data
+        usersOpenedLootboxes?.data
           .map((i) => i.balance || 0) // Treat null balance as 0
           .filter((i) => i > 40)
           .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
@@ -81,6 +95,8 @@ export function HomePage() {
 
     run();
   }, []);
+
+  if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
