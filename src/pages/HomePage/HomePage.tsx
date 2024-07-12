@@ -77,7 +77,8 @@ export function HomePage() {
           .filter((i) => i > 40)
           .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
       );
-      return setIsLoading(false);
+      setIsLoading(false);
+      return;
     };
 
     run();
