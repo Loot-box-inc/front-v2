@@ -119,6 +119,7 @@ export function HomePage() {
         <div>USDT: {JSON.stringify(USDT)}</div>
 
         <div>ERROR: {JSON.stringify(err)}</div>
+        <div>STEPS: {JSON.stringify(steps)}</div>
       </>
     );
 
