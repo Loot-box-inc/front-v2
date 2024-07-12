@@ -11,12 +11,8 @@ export function HomePage() {
   const [LOOT, setLOOT] = useState(3);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [lootboxes, setLootboxes] = useState([]);
-  const [steps, setSteps] = useState("");
-  const [startParam, setStartParam] = useState("");
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
-  const [err, setErr] = useState("");
 
   // TODO avoid unnecceary calls if receiver_id is not NULL already
 
@@ -34,10 +30,7 @@ export function HomePage() {
             .select("uuid")
             .eq("sender_id", initData?.user?.id as number),
         ]);
-        setLootboxes(usersOpenedLootboxes.data as []);
 
-        setStartParam(initData?.startParam as string);
-        setSteps("1");
         if (
           usersSendedLootboxes.data
             ?.map((i) => i.uuid)
@@ -47,9 +40,7 @@ export function HomePage() {
           setIsLoading(false);
           return;
         }
-        setSteps("12");
 
-        setSteps("123");
         if (!usersOpenedLootboxes?.data?.length) {
           setLootboxesCount(0);
           setUSDT(0);
@@ -57,9 +48,9 @@ export function HomePage() {
           setIsLoading(false);
           return;
         }
-        setSteps("1234");
+
         setLootboxesCount(usersOpenedLootboxes?.data.length);
-        setSteps("12345");
+
         setUSDT(
           usersOpenedLootboxes?.data
             .map((i) => i.balance || 0) // Treat null balance as 0
@@ -69,7 +60,7 @@ export function HomePage() {
               0
             ) // Provide a default value for reduce
         );
-        setSteps("123456");
+
         setLOOT(
           usersOpenedLootboxes?.data
             .map((i) => i.balance || 0) // Treat null balance as 0
@@ -79,12 +70,9 @@ export function HomePage() {
               0
             ) // Provide a default value for reduce
         );
-        setSteps("1234567");
+
         setIsLoading(false);
-        setSteps("12345678");
-        return;
       } catch (error) {
-        setErr(error as string);
         console.error(error);
       }
     };
@@ -127,21 +115,7 @@ export function HomePage() {
 
   // ADD SPINNER HERE
 
-  if (isLoading)
-    return (
-      <>
-        <div>Loading...</div>
-        <div>lootboxes: {JSON.stringify(lootboxes)}</div>
-        <div>isLoading: {JSON.stringify(isLoading)}</div>
-        <div>LOOT: {JSON.stringify(LOOT)}</div>
-        <div>USDT: {JSON.stringify(USDT)}</div>
-
-        <div>ERROR: {JSON.stringify(err)}</div>
-        <div>STEPS: {JSON.stringify(steps)}</div>
-
-        <div>STARTPARAM: {JSON.stringify(startParam)}</div>
-      </>
-    );
+  if (isLoading) return <div>Loading...</div>;
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
