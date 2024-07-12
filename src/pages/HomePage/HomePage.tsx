@@ -105,7 +105,7 @@ export function HomePage() {
 
   if (isLoading)
     return `Loading...
-  ${JSON.stringify(usersOpenedLootboxes)}
+  ${JSON.stringify(lootboxes)}
   `;
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
