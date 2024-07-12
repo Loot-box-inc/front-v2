@@ -67,7 +67,7 @@ export function HomePage() {
   useEffect(() => {
     const run = async () => {
       try {
-        const { error } = await supabase.from("users").insert({
+        const { error } = await supabase.from("users").upsert({
           telegram_id: initData?.user?.id as number,
           username: initData?.user?.username as string,
           first_name: initData?.user?.firstName as string,
