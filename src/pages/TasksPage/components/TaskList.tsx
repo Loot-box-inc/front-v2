@@ -16,7 +16,7 @@ export const TasksList = ({ onShare }: TasksListProps) => {
     try {
       const { data } = await supabase
         .from("lootboxes")
-        .select("id")
+        .select("uuid")
         .is("sender_id", null); // get not used lootboxes only
 
       if (!data?.length) return;
@@ -27,12 +27,12 @@ export const TasksList = ({ onShare }: TasksListProps) => {
         .from("lootboxes")
         .update({
           sender_id: initData?.user?.id,
-          parent: initData?.startParam, // TODO revert
+          parent: initData?.startParam,
         }) // пишем себя сендером = берем лутбокс
-        .eq("id", lootbox.id);
+        .eq("uuid", lootbox.uuid);
 
       utils.shareURL(
-        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.id}`,
+        `${import.meta.env.VITE_APP_BOT_URL}?startapp=${lootbox.uuid}`,
         "Look! Some cool app here!"
       );
 

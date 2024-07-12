@@ -20,7 +20,7 @@ export function HomePage() {
         supabase
           .from("lootboxes")
           .select()
-          .eq("id", initData?.startParam as string),
+          .eq("uuid", initData?.startParam as string),
         supabase
           .from("lootboxes")
           .select("balance")
@@ -35,7 +35,7 @@ export function HomePage() {
       await supabase
         .from("lootboxes")
         .update({ receiver_id: sender_id }) // sender of current lootbox
-        .eq("id", parent as string); // условие - parent lootbox
+        .eq("uuid", parent as string); // условие - parent lootbox
 
       if (!usersLootboxes?.data?.length) {
         setLootboxesCount(0);
@@ -67,15 +67,12 @@ export function HomePage() {
   useEffect(() => {
     const run = async () => {
       try {
-        const { error } = await supabase.from("users").upsert(
-          {
-            telegram_id: initData?.user?.id as number,
-            username: initData?.user?.username as string,
-            first_name: initData?.user?.firstName as string,
-            last_name: initData?.user?.lastName as string,
-          },
-          { onConflict: "telegram_id" }
-        );
+        const { error } = await supabase.from("users").upsert({
+          telegram_id: initData?.user?.id as number,
+          username: initData?.user?.username as string,
+          first_name: initData?.user?.firstName as string,
+          last_name: initData?.user?.lastName as string,
+        });
         console.error(error);
       } catch (err) {
         console.error(err);

@@ -18,6 +18,7 @@ export type Database = {
           receiver_id: number | null;
           sender_id: number | null;
           status: string | null;
+          uuid: string;
         };
         Insert: {
           balance?: number | null;
@@ -27,6 +28,7 @@ export type Database = {
           receiver_id?: number | null;
           sender_id?: number | null;
           status?: string | null;
+          uuid?: string;
         };
         Update: {
           balance?: number | null;
@@ -36,33 +38,37 @@ export type Database = {
           receiver_id?: number | null;
           sender_id?: number | null;
           status?: string | null;
+          uuid?: string;
         };
         Relationships: [];
       };
       users: {
         Row: {
           created_at: string;
-          id: number;
+          first_name: string | null;
           ip_address: string | null;
-          nickname: string | null;
+          last_name: string | null;
           phone_number: string | null;
-          telegram_id: number | null;
+          telegram_id: number;
+          username: string | null;
         };
         Insert: {
           created_at?: string;
-          id?: number;
+          first_name?: string | null;
           ip_address?: string | null;
-          nickname?: string | null;
+          last_name?: string | null;
           phone_number?: string | null;
-          telegram_id?: number | null;
+          telegram_id: number;
+          username?: string | null;
         };
         Update: {
           created_at?: string;
-          id?: number;
+          first_name?: string | null;
           ip_address?: string | null;
-          nickname?: string | null;
+          last_name?: string | null;
           phone_number?: string | null;
-          telegram_id?: number | null;
+          telegram_id?: number;
+          username?: string | null;
         };
         Relationships: [];
       };
