@@ -10,6 +10,8 @@ export function HomePage() {
   const [USDT, setUSDT] = useState(2);
   const [LOOT, setLOOT] = useState(3);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
 
   // TODO avoid unnecceary calls if receiver_id is not NULL already
@@ -55,6 +57,7 @@ export function HomePage() {
         setLootboxesCount(0);
         setUSDT(0);
         setLOOT(0);
+        setIsLoading(false);
         return;
       }
 
@@ -73,6 +76,7 @@ export function HomePage() {
           .filter((i) => i > 40)
           .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
       );
+      setIsLoading(false);
     };
 
     run();
@@ -95,6 +99,10 @@ export function HomePage() {
 
     run();
   }, []);
+
+  // ADD SPINNER HERE
+
+  if (isLoading) return "Loading...";
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
