@@ -11,6 +11,7 @@ export function HomePage() {
   const [LOOT, setLOOT] = useState(3);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [lootboxes, setLootboxes] = useState([]);
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
 
@@ -35,7 +36,7 @@ export function HomePage() {
             .select("uuid")
             .eq("sender_id", initData?.user?.id as number),
         ]);
-
+      setLootboxes(usersOpenedLootboxes.data as []);
       if (
         usersSendedLootboxes.data
           ?.map((i) => i.uuid)
@@ -102,11 +103,14 @@ export function HomePage() {
 
   // ADD SPINNER HERE
 
-  if (isLoading) return "Loading...";
+  if (isLoading)
+    return `Loading...
+  ${JSON.stringify(usersOpenedLootboxes)}
+  `;
 
-  if (isSendersLootbox) {
-    return <div>You can't open your lootboxes!</div>;
-  } else {
+  if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
+
+  return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <img src="./lootbox-closed.gif" alt="loading..." />
       <span className="text-center mt-50 p-5 pt-50 ">
@@ -117,6 +121,6 @@ export function HomePage() {
       <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
         Go!
       </Link>
-    </main>;
-  }
+    </main>
+  );
 }
