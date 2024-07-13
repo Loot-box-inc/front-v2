@@ -2,10 +2,10 @@ import { Link } from "@/components/Link/Link";
 import { initInitData } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function HomePage() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const initData = initInitData();
 
   const [lootboxesCount, setLootboxesCount] = useState(1);
@@ -98,6 +98,8 @@ export function HomePage() {
       // if (!data?.length)
       // return redirect("/tasks");
 
+      navigate("/tasks", { replace: true });
+
       const { sender_id, parent, uuid } = data![0];
       setLootbox(uuid);
       // ничего не делаем, если пытаются вручную UUID в ссылке указать
@@ -128,8 +130,6 @@ export function HomePage() {
   }, []);
 
   // ADD SPINNER HERE
-
-  return redirect("/tasks");
 
   if (isLoading) return <div>Loading...</div>;
 
