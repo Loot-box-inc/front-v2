@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 3</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-7" transform="translate(-169.000000, -33.000000)">
+            <g id="Group-3" transform="translate(169.000000, 33.000000)">
+                <circle id="Oval" fill="#FFFFFF" cx="16" cy="16" r="16"></circle>
+                <g id="Group-2" transform="translate(6.000000, 4.000000)">
+                    <path d="M10,0.564868783 L19.5,5.55853516 L19.5,18.3861211 L10,23.4338029 L0.5,18.3861211 L0.5,5.55853516 L10,0.564868783 Z" id="Rectangle" stroke="#1D2733" fill="#FFFFFF"></path>
+                    <ellipse id="Oval" fill="#1D2733" transform="translate(14.726752, 14.481453) rotate(12.000000) translate(-14.726752, -14.481453) " cx="14.7267524" cy="14.4814529" rx="2.15" ry="3"></ellipse>
+                    <polygon id="Rectangle" fill="#1D2733" points="10.0361502 0.807199441 20 5.54436546 10 10.2815315 9.02056208e-15 5.54436546"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

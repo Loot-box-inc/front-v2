@@ -1,4 +1,5 @@
 import { Link } from "@/components/Link/Link";
+// import { useUserBalance } from "@/hooks/useUserBalance";
 import { initInitData } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
@@ -110,26 +111,22 @@ export function HomePage() {
     run();
   }, []);
 
-  // ADD SPINNER HERE
-
-  // if (isLoading) return <div>Loading...</div>;
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-black">
       {isSendersLootbox && (
-        <span className="text-red-600 text-center mt-50 p-5 pt-50 ">
+        <span className="text-center mt-50 p-5 pt-50 text-white">
           You can't open your lootboxes!
         </span>
       )}
 
       {isLootboxAlreadyOpened && (
-        <span className="text-red-600 text-center mt-50 p-5 pt-50 ">
+        <span className="text-center mt-50 p-5 pt-50 text-white">
           Lootbox was already opened!
         </span>
       )}
 
       {isNotFirstLootbox && (
-        <span className="text-red-600 text-center mt-50 p-5 pt-50 ">
+        <span className="text-center mt-50 p-5 pt-50 text-white">
           You can't open more than one lootbox from a user
         </span>
       )}
@@ -137,7 +134,7 @@ export function HomePage() {
       {!isLoading && (
         <>
           <img src="./lootbox-closed.gif" alt="loading..." />
-          <span className="text-red-600 text-center mt-50 p-5 pt-50 ">
+          <span className="text-center mt-50 p-5 pt-50 text-white">
             {`You've already opened ${lootboxesCount} lootboxes and your balance is ${USDT} USDT and ${LOOT} LOOT.
         To open this box, you need to fulfill a task`}
           </span>

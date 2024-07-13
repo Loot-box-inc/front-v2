@@ -1,16 +1,13 @@
 import { ActionButton } from "@/pages/TasksPage/components/ActionButton";
 import { ActionItem } from "@/pages/TasksPage/components/ActionItem";
+import { supabase } from "@/supabase";
 import { initInitData, initUtils } from "@telegram-apps/sdk";
+import { useNavigate } from "react-router-dom";
 
-import { supabase } from "../../../supabase";
-
-interface TasksListProps {
-  onShare: (arg0: boolean) => void;
-}
-
-export const TasksList = ({ onShare }: TasksListProps) => {
+export const TasksList = () => {
   const initData = initInitData();
   const utils = initUtils();
+  const navigate = useNavigate();
 
   const _onShare = async () => {
     try {
@@ -36,7 +33,9 @@ export const TasksList = ({ onShare }: TasksListProps) => {
         "Look! Some cool app here!"
       );
 
-      onShare(true);
+      // onShare(true);
+
+      navigate("/history");
     } catch (error) {
       console.error(error);
     }
@@ -44,7 +43,7 @@ export const TasksList = ({ onShare }: TasksListProps) => {
 
   return (
     <>
-      <h1 className="-mt-20 pb-5 text-center font-bold text-lg">
+      <h1 className="-mt-20 pb-5 text-center text-white font-bold text-lg">
         Choose from one of the tasks below:
       </h1>
       <div>
@@ -54,11 +53,19 @@ export const TasksList = ({ onShare }: TasksListProps) => {
         />
         <ActionItem
           text="2. Upload a video with you and your friends"
-          actionButton={<ActionButton onShare={() => {}}>Upload</ActionButton>}
+          actionButton={
+            <ActionButton disabled onShare={() => {}}>
+              Upload
+            </ActionButton>
+          }
         />
         <ActionItem
           text="3. Join our group"
-          actionButton={<ActionButton onShare={() => {}}>Join</ActionButton>}
+          actionButton={
+            <ActionButton disabled onShare={() => {}}>
+              Join
+            </ActionButton>
+          }
         />
       </div>
     </>

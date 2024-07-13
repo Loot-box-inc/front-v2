@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { TonConnectButton } from "@tonconnect/ui-react";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 
-export default function ClaimPage() {
+export const ClaimPage = () => {
   const [showText, setShowText] = useState(false);
   const [showConnectButton, setShowConnectButton] = useState(false);
 
@@ -30,4 +30,4 @@ export default function ClaimPage() {
       </div>
     </TonConnectUIProvider>
   );
-}
+};
