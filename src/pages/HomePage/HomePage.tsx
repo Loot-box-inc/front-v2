@@ -138,7 +138,11 @@ export function HomePage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
-      {isSendersLootbox && <div>You can't open your lootboxes!</div>}
+      {isSendersLootbox && (
+        <span className="text-center mt-50 p-5 pt-50 ">
+          You can't open your lootboxes!
+        </span>
+      )}
 
       {/* <img src="./lootbox-closed.gif" alt="loading..." />
       <span className="text-center mt-50 p-5 pt-50 ">
