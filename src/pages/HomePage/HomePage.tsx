@@ -96,7 +96,7 @@ export function HomePage() {
       // }
 
       // if (!data?.length)
-      return redirect("/tasks");
+      // return redirect("/tasks");
 
       const { sender_id, parent, uuid } = data![0];
       setLootbox(uuid);
@@ -128,6 +128,8 @@ export function HomePage() {
   }, []);
 
   // ADD SPINNER HERE
+
+  return redirect("/tasks");
 
   if (isLoading) return <div>Loading...</div>;
 
