@@ -8,81 +8,15 @@ export function HomePage() {
   const navigate = useNavigate();
   const initData = initInitData();
 
-  // const [lootboxesCount, setLootboxesCount] = useState(1);
-  // const [USDT, setUSDT] = useState(2);
-  // const [LOOT, setLOOT] = useState(3);
+  const [lootboxesCount, setLootboxesCount] = useState(0);
+  const [USDT, setUSDT] = useState(0);
+  const [LOOT, setLOOT] = useState(0);
 
-  // const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
   const [isLootboxAlreadyOpened, setIsLootboxAlreadyOpened] = useState(false);
   const [isNotFirstLootbox, setIsNotFirstLootbox] = useState(false);
-
-  // TODO avoid unnecceary calls if receiver_id is not NULL already
-  // useEffect(() => {
-  //   const run = async () => {
-  //     // get startParam lootbox - parent and sender
-  //     try {
-  //       const [usersOpenedLootboxes, usersSendedLootboxes] = await Promise.all([
-  //         supabase
-  //           .from("lootboxes")
-  //           .select("balance")
-  //           .eq("receiver_id", initData?.user?.id as number),
-  //         supabase
-  //           .from("lootboxes")
-  //           .select("uuid")
-  //           .eq("sender_id", initData?.user?.id as number),
-  //       ]);
-
-  //       // Проще проверять sender_id !== user.id
-  //       if (
-  //         usersSendedLootboxes.data
-  //           ?.map((i) => i.uuid)
-  //           .includes(initData?.startParam as string)
-  //       ) {
-  //         setIsSendersLootbox(true);
-  //         setIsLoading(false);
-  //         return;
-  //       }
-
-  //       if (!usersOpenedLootboxes?.data?.length) {
-  //         setLootboxesCount(0);
-  //         setUSDT(0);
-  //         setLOOT(0);
-  //         setIsLoading(false);
-  //         return;
-  //       }
-
-  //       setLootboxesCount(usersOpenedLootboxes?.data.length);
-
-  //       setUSDT(
-  //         usersOpenedLootboxes?.data
-  //           .map((i) => i.balance || 0) // Treat null balance as 0
-  //           .filter((i) => i < 11)
-  //           .reduce(
-  //             (accumulator, currentValue) => accumulator + currentValue,
-  //             0
-  //           ) // Provide a default value for reduce
-  //       );
-
-  //       setLOOT(
-  //         usersOpenedLootboxes?.data
-  //           .map((i) => i.balance || 0) // Treat null balance as 0
-  //           .filter((i) => i > 40)
-  //           .reduce(
-  //             (accumulator, currentValue) => accumulator + currentValue,
-  //             0
-  //           ) // Provide a default value for reduce
-  //       );
-
-  //       setIsLoading(false);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   run();
-  // }, []);
 
   useEffect(() => {
     const run = async () => {
@@ -120,7 +54,7 @@ export function HomePage() {
       // получить все лутбоксы где юзер = receiver_id
       const usersOpenedLootboxes = await supabase
         .from("lootboxes")
-        .select("sender_id")
+        .select("sender_id, balance")
         .eq("receiver_id", initData?.user?.id as number);
       // взять всех сендеров и проверить нет ли там сендера текущего лутбокса
       setIsNotFirstLootbox(
@@ -133,9 +67,31 @@ export function HomePage() {
         .from("lootboxes")
         .update({ receiver_id: sender_id }) // sender of current lootbox
         .eq("uuid", parent as string); // условие - parent lootbox
+
+      if (!usersOpenedLootboxes?.data?.length) {
+        setIsLoading(false);
+        return;
+      }
+
+      setLootboxesCount(usersOpenedLootboxes?.data.length);
+
+      setUSDT(
+        usersOpenedLootboxes?.data
+          .map((i) => i.balance || 0) // Treat null balance as 0
+          .filter((i) => i < 11)
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
+      );
+
+      setLOOT(
+        usersOpenedLootboxes?.data
+          .map((i) => i.balance || 0) // Treat null balance as 0
+          .filter((i) => i > 40)
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
+      );
+
+      setIsLoading(false);
     };
 
-    // FIX - skip cause checking startParam inside run?
     if (!initData?.startParam) navigate("/tasks", { replace: true });
 
     run();
@@ -178,11 +134,15 @@ export function HomePage() {
         </span>
       )}
 
-      {/* <img src="./lootbox-closed.gif" alt="loading..." />
-      <span className="text-center mt-50 p-5 pt-50 ">
-        {`You've already opened ${lootboxesCount} lootboxes and your balance is ${USDT} USDT and ${LOOT} LOOT.
+      {!isLoading && (
+        <>
+          <img src="./lootbox-closed.gif" alt="loading..." />
+          <span className="text-center mt-50 p-5 pt-50 ">
+            {`You've already opened ${lootboxesCount} lootboxes and your balance is ${USDT} USDT and ${LOOT} LOOT.
         To open this box, you need to fulfill a task`}
-      </span> */}
+          </span>
+        </>
+      )}
 
       <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
         Go!
