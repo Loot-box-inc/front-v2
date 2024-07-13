@@ -95,7 +95,7 @@ export function HomePage() {
       //   return;
       // }
 
-      if (lootbox.length < 1 && !isLoading) return navigate("/tasks");
+      if (!data?.length) return navigate("/tasks");
 
       const { sender_id, parent, uuid } = data![0];
       setLootbox(uuid);
