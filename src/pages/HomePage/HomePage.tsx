@@ -2,9 +2,10 @@ import { Link } from "@/components/Link/Link";
 import { initInitData } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function HomePage() {
+  const navigate = useNavigate();
   const initData = initInitData();
 
   const [lootboxesCount, setLootboxesCount] = useState(1);
@@ -126,7 +127,7 @@ export function HomePage() {
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (lootbox.length > 1 && !isLoading) return redirect("/tasks");
+  if (lootbox.length > 1 && !isLoading) return navigate("/tasks");
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
