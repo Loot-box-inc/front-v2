@@ -15,6 +15,8 @@ export function HomePage() {
   // const [isLoading, setIsLoading] = useState(true);
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
+  const [isLootboxAlreadyOpened, setIsLootboxAlreadyOpened] = useState(false);
+  const [isNotFirstLootbox, setIsNotFirstLootbox] = useState(false);
 
   // TODO avoid unnecceary calls if receiver_id is not NULL already
   // useEffect(() => {
@@ -95,17 +97,37 @@ export function HomePage() {
         return navigate("/tasks", { replace: true });
       }
 
-      const { sender_id, parent } = data![0];
+      const { sender_id, receiver_id, parent } = data![0];
 
       // ничего не делаем, если пытаются вручную UUID в ссылке указать
       // и отгадывают реальный НЕоткрытый lootbox => go to next /tasks screen
       if (sender_id == null) return navigate("/tasks", { replace: true });
 
-      // Проще проверять sender_id !== user.id
+      // юзер отправил сам себе
       if (sender_id === (initData?.user?.id as number)) {
         setIsSendersLootbox(true);
         return;
       }
+
+      // лутбокс уже открыт
+      if (receiver_id != null) {
+        setIsLootboxAlreadyOpened(true);
+        return;
+      }
+
+      // 2ой раз уже от этого sender'a
+
+      // получить все лутбоксы где юзер = receiver_id
+      const usersOpenedLootboxes = await supabase
+        .from("lootboxes")
+        .select("sender_id")
+        .eq("receiver_id", initData?.user?.id as number);
+      // взять всех сендеров и проверить нет ли там сендера текущего лутбокса
+      setIsNotFirstLootbox(
+        usersOpenedLootboxes?.data
+          ?.map((i) => i.sender_id)
+          .includes(sender_id) as boolean
+      );
 
       await supabase
         .from("lootboxes")
@@ -141,6 +163,18 @@ export function HomePage() {
       {isSendersLootbox && (
         <span className="text-center mt-50 p-5 pt-50 ">
           You can't open your lootboxes!
+        </span>
+      )}
+
+      {isLootboxAlreadyOpened && (
+        <span className="text-center mt-50 p-5 pt-50 ">
+          Lootbox was already opened!
+        </span>
+      )}
+
+      {isNotFirstLootbox && (
+        <span className="text-center mt-50 p-5 pt-50 ">
+          You can't open more than one lootbox from a user
         </span>
       )}
 
