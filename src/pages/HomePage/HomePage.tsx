@@ -2,8 +2,11 @@ import { Link } from "@/components/Link/Link";
 import { initInitData } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
+import { useNavigate } from "react-router-dom";
 
 export function HomePage() {
+  const navigate = useNavigate();
+
   const initData = initInitData();
 
   const [lootboxesCount, setLootboxesCount] = useState(1);
@@ -13,9 +16,11 @@ export function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
+  const [lootbox, setLootbox] = useState("");
+
+  if (lootbox.length > 1 && !isLoading) navigate("/tasks");
 
   // TODO avoid unnecceary calls if receiver_id is not NULL already
-
   useEffect(() => {
     const run = async () => {
       // get startParam lootbox - parent and sender
@@ -87,11 +92,14 @@ export function HomePage() {
         .select()
         .eq("uuid", initData?.startParam as string);
 
-      // TODO handle no lootbox
-      if (!data?.length) return;
+      // Handle no lootbox
+      if (!data?.length) {
+        setIsLoading(false);
+        return;
+      }
 
-      const { sender_id, parent } = data![0];
-
+      const { sender_id, parent, uuid } = data![0];
+      setLootbox(uuid);
       // ничего не делаем, если пытаются вручную UUID в ссылке указать
       // и отгадывают реальный НЕоткрытый lootbox => go to next /tasks screen
       if (sender_id == null || parent == null) return;
