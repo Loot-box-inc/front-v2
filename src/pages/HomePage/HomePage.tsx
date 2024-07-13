@@ -15,7 +15,7 @@ export function HomePage() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [isSendersLootbox, setIsSendersLootbox] = useState(false);
+  // const [isSendersLootbox, setIsSendersLootbox] = useState(false);
 
   // TODO avoid unnecceary calls if receiver_id is not NULL already
   useEffect(() => {
@@ -39,7 +39,7 @@ export function HomePage() {
             ?.map((i) => i.uuid)
             .includes(initData?.startParam as string)
         ) {
-          setIsSendersLootbox(true);
+          // setIsSendersLootbox(true);
           setIsLoading(false);
           return;
         }
