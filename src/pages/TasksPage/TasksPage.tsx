@@ -14,7 +14,11 @@ export default function TasksPage() {
       {hasShared ? (
         <ClaimReward />
       ) : (
-        <TasksList onShare={(hasShared: boolean) => setHasShared(hasShared)} />
+        <>
+          <TasksList
+            onShare={(hasShared: boolean) => setHasShared(hasShared)}
+          />
+        </>
       )}
     </main>
   );

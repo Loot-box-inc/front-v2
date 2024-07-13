@@ -3,6 +3,7 @@ import { initInitData } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -15,7 +16,6 @@ export function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
-  const [lootbox, setLootbox] = useState("");
 
   // TODO avoid unnecceary calls if receiver_id is not NULL already
   useEffect(() => {
@@ -33,6 +33,7 @@ export function HomePage() {
             .eq("sender_id", initData?.user?.id as number),
         ]);
 
+        // Проще проверять sender_id !== user.id
         if (
           usersSendedLootboxes.data
             ?.map((i) => i.uuid)
@@ -90,21 +91,16 @@ export function HomePage() {
         .eq("uuid", initData?.startParam as string);
 
       // Handle no lootbox
-      // if (!data?.length) {
-      //   setIsLoading(false);
-      //   return;
-      // }
+      if (!data?.length) {
+        // setIsLoading(false);
+        return navigate("/tasks", { replace: true });
+      }
 
-      // if (!data?.length)
-      // return redirect("/tasks");
+      const { sender_id, parent } = data![0];
 
-      navigate("/tasks", { replace: true });
-
-      const { sender_id, parent, uuid } = data![0];
-      setLootbox(uuid);
       // ничего не делаем, если пытаются вручную UUID в ссылке указать
       // и отгадывают реальный НЕоткрытый lootbox => go to next /tasks screen
-      if (sender_id == null || parent == null) return;
+      if (sender_id == null) return navigate("/tasks", { replace: true });
 
       await supabase
         .from("lootboxes")
@@ -113,7 +109,9 @@ export function HomePage() {
     };
 
     // FIX - skip cause checking startParam inside run?
-    if (initData?.startParam) run();
+    if (!initData?.startParam) navigate("/tasks", { replace: true });
+
+    run();
   }, []);
 
   useEffect(() => {
@@ -127,6 +125,10 @@ export function HomePage() {
     };
 
     run();
+  }, []);
+
+  useEffect(() => {
+    toast("Hello World");
   }, []);
 
   // ADD SPINNER HERE
@@ -145,8 +147,7 @@ export function HomePage() {
       <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
         Go!
       </Link>
-      {/* REMOVE */}
-      {lootbox}
+      <Toaster />
     </main>
   );
 }
