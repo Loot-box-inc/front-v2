@@ -10,9 +10,6 @@ export function HomePage() {
   const [USDT, setUSDT] = useState(2);
   const [LOOT, setLOOT] = useState(3);
 
-  const [d, setD] = useState([]);
-  const [err, setErr] = useState("");
-
   const [isLoading, setIsLoading] = useState(true);
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
@@ -85,15 +82,13 @@ export function HomePage() {
 
   useEffect(() => {
     const run = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("lootboxes")
         .select()
         .eq("uuid", initData?.startParam as string);
 
-      setD(data as []);
-      // @ts-expect-error
-      setErr(error as string);
       // TODO handle no lootbox
+      if (!data?.length) return;
 
       const { sender_id, parent } = data![0];
 
@@ -125,14 +120,7 @@ export function HomePage() {
 
   // ADD SPINNER HERE
 
-  if (isLoading)
-    return (
-      <>
-        <div>Loading...</div>
-        <div>D: {JSON.stringify(d)}</div>
-        <div>ERROR: {JSON.stringify(err)}</div>
-      </>
-    );
+  if (isLoading) return <div>Loading...</div>;
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
@@ -147,9 +135,6 @@ export function HomePage() {
       <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
         Go!
       </Link>
-
-      <div>D: {JSON.stringify(d)}</div>
-      <div>ERROR: {JSON.stringify(err)}</div>
     </main>
   );
 }
