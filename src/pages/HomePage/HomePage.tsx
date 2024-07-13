@@ -2,10 +2,10 @@ import { Link } from "@/components/Link/Link";
 import { initInitData } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 
 export function HomePage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const initData = initInitData();
 
   const [lootboxesCount, setLootboxesCount] = useState(1);
@@ -95,7 +95,7 @@ export function HomePage() {
       //   return;
       // }
 
-      if (!data?.length) return navigate("/tasks");
+      if (!data?.length) return redirect("/tasks");
 
       const { sender_id, parent, uuid } = data![0];
       setLootbox(uuid);
@@ -109,6 +109,7 @@ export function HomePage() {
         .eq("uuid", parent as string); // условие - parent lootbox
     };
 
+    // FIX - skip cause checking startParam inside run?
     if (initData?.startParam) run();
   }, []);
 
@@ -138,10 +139,11 @@ export function HomePage() {
         {`You've already opened ${lootboxesCount} lootboxes and your balance is ${USDT} USDT and ${LOOT} LOOT.
         To open this box, you need to fulfill a task`}
       </span>
-
       <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
         Go!
       </Link>
+      {/* REMOVE */}
+      {lootbox}
     </main>
   );
 }
