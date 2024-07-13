@@ -16,26 +16,10 @@ export function HomePage() {
     const run = async () => {
       // get startParam lootbox - parent and sender
 
-      const [lootbox, usersLootboxes] = await Promise.all([
-        supabase
-          .from("lootboxes")
-          .select()
-          .eq("id", initData?.startParam as string),
-        supabase
-          .from("lootboxes")
-          .select("balance")
-          .eq("receiver_id", initData?.user?.id as number),
-      ]);
-
-      const { data } = lootbox;
-
-      // @ts-expect-error - to lazy to fix now
-      const { sender_id, parent } = data[0];
-
-      await supabase
+      const usersLootboxes = await supabase
         .from("lootboxes")
-        .update({ receiver_id: sender_id }) // sender of current lootbox
-        .eq("id", parent as string); // условие - parent lootbox
+        .select("balance")
+        .eq("receiver_id", initData?.user?.id as number);
 
       if (!usersLootboxes?.data?.length) {
         setLootboxesCount(0);
@@ -63,6 +47,24 @@ export function HomePage() {
 
     run();
   });
+
+  useEffect(() => {
+    const run = async () => {
+      const { data } = await supabase
+        .from("lootboxes")
+        .select()
+        .eq("uuid", initData?.startParam as string);
+
+      const { sender_id, parent } = data![0];
+
+      await supabase
+        .from("lootboxes")
+        .update({ receiver_id: sender_id }) // sender of current lootbox
+        .eq("id", parent as string); // условие - parent lootbox
+    };
+
+    if (initData?.startParam) run();
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
