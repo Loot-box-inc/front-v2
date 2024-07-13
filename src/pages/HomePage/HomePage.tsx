@@ -136,17 +136,20 @@ export function HomePage() {
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
-  // return (
-  //   <main className="flex min-h-screen flex-col items-center justify-center">
-  //     <img src="./lootbox-closed.gif" alt="loading..." />
-  //     <span className="text-center mt-50 p-5 pt-50 ">
-  //       {`You've already opened ${lootboxesCount} lootboxes and your balance is ${USDT} USDT and ${LOOT} LOOT.
-  //       To open this box, you need to fulfill a task`}
-  //     </span>
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <img src="./lootbox-closed.gif" alt="loading..." />
+      <span className="text-center mt-50 p-5 pt-50 ">
+        {`You've already opened ${lootboxesCount} lootboxes and your balance is ${USDT} USDT and ${LOOT} LOOT.
+        To open this box, you need to fulfill a task`}
+      </span>
 
-  //     <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
-  //       Go!
-  //     </Link>
-  //   </main>
-  // );
+      <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
+        Go!
+      </Link>
+
+      <div>D: {JSON.stringify(d)}</div>
+      <div>ERROR: {JSON.stringify(err)}</div>
+    </main>
+  );
 }
