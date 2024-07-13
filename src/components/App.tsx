@@ -45,6 +45,19 @@ export const App: FC = () => {
     return () => navigator.detach();
   }, [navigator]);
 
+  if (
+    ["macos", "tdesktop", "unigram", "unknown", "web", "weba"].includes(
+      lp.platform
+    )
+  ) {
+    return (
+      <main className="flex flex-col items-center justify-center min-h-screen gap-2 text-white">
+        <h1>Unsupported platform</h1>
+        <p>Please use IOS or Android</p>
+      </main>
+    );
+  }
+
   return (
     <AppRoot
       appearance={miniApp.isDark ? "dark" : "light"}
