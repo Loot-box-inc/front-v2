@@ -127,9 +127,9 @@ export function HomePage() {
     run();
   }, []);
 
-  // useEffect(() => {
-  //   toast("Hello World");
-  // }, []);
+  useEffect(() => {
+    toast("Hello World");
+  }, []);
 
   const notify = () => toast("Here is your toast.");
 
