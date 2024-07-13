@@ -135,7 +135,7 @@ export function HomePage() {
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
+  // if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
