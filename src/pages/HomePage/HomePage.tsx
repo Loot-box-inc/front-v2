@@ -10,6 +10,9 @@ export function HomePage() {
   const [USDT, setUSDT] = useState(2);
   const [LOOT, setLOOT] = useState(3);
 
+  const [d, setD] = useState([]);
+  const [err, setErr] = useState("");
+
   const [isLoading, setIsLoading] = useState(true);
 
   const [isSendersLootbox, setIsSendersLootbox] = useState(false);
@@ -82,14 +85,21 @@ export function HomePage() {
 
   useEffect(() => {
     const run = async () => {
-      const lootbox = await supabase
+      const { data, error } = await supabase
         .from("lootboxes")
         .select()
         .eq("uuid", initData?.startParam as string);
 
-      const { data } = lootbox;
+      setD(data as []);
+      // @ts-expect-error
+      setErr(error as string);
+      // handle no lootbox
 
       const { sender_id, parent } = data![0];
+
+      // ничего не делаем, если пытаются вручную UUID в ссылке указать
+      // и отгадывают реальный НЕоткрытый lootbox
+      if (sender_id == null) return;
 
       await supabase
         .from("lootboxes")
@@ -115,7 +125,14 @@ export function HomePage() {
 
   // ADD SPINNER HERE
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <>
+        <div>Loading...</div>
+        <div>D: {JSON.stringify(d)}</div>
+        <div>ERROR: {JSON.stringify(err)}</div>
+      </>
+    );
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
