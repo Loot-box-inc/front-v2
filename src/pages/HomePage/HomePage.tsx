@@ -127,9 +127,11 @@ export function HomePage() {
     run();
   }, []);
 
-  useEffect(() => {
-    toast("Hello World");
-  }, []);
+  // useEffect(() => {
+  //   toast("Hello World");
+  // }, []);
+
+  const notify = () => toast("Here is your toast.");
 
   // ADD SPINNER HERE
 
@@ -147,6 +149,7 @@ export function HomePage() {
       <Link to="/tasks" className="bg-blue rounded p-2 px-10 text-white">
         Go!
       </Link>
+      <button onClick={notify}>Make me a toast</button>
       <Toaster />
     </main>
   );
