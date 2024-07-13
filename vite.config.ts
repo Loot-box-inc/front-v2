@@ -5,7 +5,7 @@ import svgr from "vite-plugin-svgr";
 // import basicSsl from '@vitejs/plugin-basic-ssl';
 
 export default defineConfig({
-  base: "/",
+  base: "/front-v2",
   plugins: [
     react(),
     tsconfigPaths(),
