@@ -90,10 +90,12 @@ export function HomePage() {
         .eq("uuid", initData?.startParam as string);
 
       // Handle no lootbox
-      if (!data?.length) {
-        setIsLoading(false);
-        return;
-      }
+      // if (!data?.length) {
+      //   setIsLoading(false);
+      //   return;
+      // }
+
+      if (lootbox.length < 1 && !isLoading) return navigate("/tasks");
 
       const { sender_id, parent, uuid } = data![0];
       setLootbox(uuid);
@@ -126,8 +128,6 @@ export function HomePage() {
   // ADD SPINNER HERE
 
   if (isLoading) return <div>Loading...</div>;
-
-  if (lootbox.length > 1 && !isLoading) return navigate("/tasks");
 
   if (isSendersLootbox) return <div>You can't open your lootboxes!</div>;
 
