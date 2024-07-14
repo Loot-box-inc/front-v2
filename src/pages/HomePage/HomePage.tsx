@@ -124,7 +124,10 @@ export function HomePage() {
       setIsLoading(false);
     };
 
-    if (!initData?.startParam) runWithoutUUID();
+    if (!initData?.startParam) {
+      runWithoutUUID();
+      return;
+    }
 
     run();
   }, []);
