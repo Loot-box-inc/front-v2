@@ -93,7 +93,38 @@ export function HomePage() {
       setIsLoading(false);
     };
 
-    if (!initData?.startParam) navigate("/tasks", { replace: true });
+    const runWithoutUUID = async () => {
+      // получить все лутбоксы где юзер = receiver_id
+      const usersOpenedLootboxes = await supabase
+        .from("lootboxes")
+        .select("sender_id, balance")
+        .eq("receiver_id", initData?.user?.id as number);
+
+      if (!usersOpenedLootboxes?.data?.length) {
+        setIsLoading(false);
+        return;
+      }
+
+      setLootboxesCount(usersOpenedLootboxes?.data.length);
+
+      setUSDT(
+        usersOpenedLootboxes?.data
+          .map((i) => i.balance || 0) // Treat null balance as 0
+          .filter((i) => i < 11)
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
+      );
+
+      setLOOT(
+        usersOpenedLootboxes?.data
+          .map((i) => i.balance || 0) // Treat null balance as 0
+          .filter((i) => i > 40)
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0) // Provide a default value for reduce
+      );
+
+      setIsLoading(false);
+    };
+
+    if (!initData?.startParam) runWithoutUUID();
 
     run();
   }, []);
