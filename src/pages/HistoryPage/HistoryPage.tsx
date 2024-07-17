@@ -1,5 +1,4 @@
 import { Link } from "@/components/Link/Link";
-import { TonConnectButton } from "@tonconnect/ui-react";
 import USDT from "@/assets/usdt.svg?react";
 import LOOT from "@/assets/loot.svg?react";
 import { supabase } from "@/supabase";
@@ -37,7 +36,7 @@ export const HistoryPage = () => {
             <p className="text-sm">LOOT {lootBalance}</p>
           </div>
         </div>
-        <TonConnectButton />
+        {/* <TonConnectButton /> */}
       </div>
 
       <Link

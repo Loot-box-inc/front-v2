@@ -3,11 +3,14 @@ import { ActionItem } from "@/pages/TasksPage/components/ActionItem";
 import { supabase } from "@/supabase";
 import { initInitData, initUtils } from "@telegram-apps/sdk";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 export const TasksList = () => {
   const initData = initInitData();
   const utils = initUtils();
   const navigate = useNavigate();
+
+  const parentFromBot = `${uuidv4()}`;
 
   const _onShare = async () => {
     try {
@@ -24,7 +27,7 @@ export const TasksList = () => {
         .from("lootboxes")
         .update({
           sender_id: initData?.user?.id,
-          parent: initData?.startParam,
+          parent: initData?.startParam || parentFromBot,
         }) // пишем себя сендером = берем лутбокс
         .eq("uuid", lootbox.uuid);
 
@@ -46,6 +49,7 @@ export const TasksList = () => {
       <h1 className="-mt-20 pb-5 text-center text-white font-bold text-lg">
         Choose from one of the tasks below:
       </h1>
+      {/* Debug: {parentFromBot} */}
       <div>
         <ActionItem
           text="1. Share a lootbox with a friend/s"
