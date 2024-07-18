@@ -22,7 +22,6 @@ export const useUserTransactions = ({ initData }: useUserTransactionsProps) => {
 
       setUserTransactions(data.data);
     };
-    console.log("useId", initData?.user?.id);
     getData();
   }, []);
 

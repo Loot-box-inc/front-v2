@@ -19,7 +19,7 @@ export const HistoryPage = () => {
       return data;
     };
 
-    getData().then((res) => console.log("res", res));
+    getData().then((res) => console.log("res"));
   }, []);
 
   return (
