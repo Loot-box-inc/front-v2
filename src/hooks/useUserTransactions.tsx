@@ -12,6 +12,9 @@ type userTransactionsType =
   | null;
 
 export const useUserTransactions = ({ initData }: useUserTransactionsProps) => {
+  if(initData) {
+    console.log('ok')
+  }
   const [userTransactions, setUserTransactions] =
     useState<userTransactionsType>();
 
