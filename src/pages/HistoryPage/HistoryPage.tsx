@@ -2,11 +2,12 @@ import { Link } from "@/components/Link/Link";
 import USDT from "@/assets/usdt.svg?react";
 import LOOT from "@/assets/loot.svg?react";
 import { supabase } from "@/supabase";
-import { useEffect } from "react";
-import { initInitData } from "@telegram-apps/sdk";
+import { useEffect, useMemo } from "react";
+import { classNames, initInitData } from "@telegram-apps/sdk";
 import { useUserBalance } from "@/hooks/useUserBalance";
 import { useUserTransactions } from "@/hooks/useUserTransactions";
 import { format } from "date-fns";
+import { compareDesc } from "date-fns/compareDesc";
 
 export const HistoryPage = () => {
   const initData = initInitData();
@@ -20,11 +21,22 @@ export const HistoryPage = () => {
     };
 
     getData().then((res) => {
-      if(res){
-        console.log('ok')
+      if (res) {
+        console.log("ok");
       }
     });
   }, []);
+
+  const userTransactionsData = useMemo(() => {
+    return userTransactions
+      ?.filter((el) => el.sender_updated_at && el.Status_opened)
+      .sort((a, b) =>
+        compareDesc(
+          a.sender_updated_at as string,
+          b.sender_updated_at as string
+        )
+      );
+  }, [userTransactions]);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-[#1D2733] text-white">
@@ -54,49 +66,54 @@ export const HistoryPage = () => {
       <div className="w-full px-2">
         <p>Transaction history</p>
 
-        {userTransactions?.map((el) => {
-          if (!el.sender_updated_at && !el.Status_opened) {
-            return;
-          }
-          return (
-            <div
-              key={el.id}
-              className="bg-black rounded-md mt-2 px-2 flex items-center gap-2"
-            >
-              <img src="./box.png" height={75} width={75} />
-              <p className="w-1/5">
-                {el.sender_updated_at
-                  ? format(new Date(el.sender_updated_at), "hh:mm dd MMMyyyy")
-                  : "-"}
-              </p>
-              <p className="w-1/4">{el.receiver_id || "-"}</p>
-
-              {el.Status_opened === "received" && (
-                <Link
-                  to="/claim"
-                  className="bg-blue px-2 py-1 text-white rounded-full w-fit flex truncate"
-                >
-                  See lootbox
-                </Link>
-              )}
-
-              {el.Status_opened === "opened" && (
-                <p>
-                  {el.balance_LOOT && el.balance_LOOT > 0
-                    ? `${el.balance_LOOT} LOOT`
-                    : ""}
-
-                  {el.balance_USDT && el.balance_USDT > 0
-                    ? `${el.balance_USDT} USDt`
-                    : ""}
+        {userTransactionsData &&
+          userTransactionsData.length > 0 &&
+          userTransactionsData?.map((el, idx) => {
+            if (!el.sender_updated_at && !el.Status_opened) {
+              return;
+            }
+            return (
+              <div
+                key={el.id}
+                className={classNames(
+                  "bg-black rounded-md mt-2 px-2 flex items-center gap-2",
+                  idx === 0 ? "animate-pulse	" : ""
+                )}
+              >
+                <img src="./box.png" height={75} width={75} />
+                <p className="w-1/5">
+                  {el.sender_updated_at
+                    ? format(new Date(el.sender_updated_at), "hh:mm dd MMMyyyy")
+                    : "-"}
                 </p>
-              )}
+                <p className="w-1/4">{el.receiver_id || "-"}</p>
 
-              {el.Status_opened === "unopened" && <p>Unopened</p>}
-              {/* <p className="w-1/4">{el.Status_opened || "-"}</p> */}
-            </div>
-          );
-        })}
+                {el.Status_opened === "received" && (
+                  <Link
+                    to="/claim"
+                    className="bg-blue px-2 py-1 text-white rounded-full w-fit flex truncate"
+                  >
+                    See lootbox
+                  </Link>
+                )}
+
+                {el.Status_opened === "opened" && (
+                  <p>
+                    {el.balance_LOOT && el.balance_LOOT > 0
+                      ? `${el.balance_LOOT} LOOT`
+                      : ""}
+
+                    {el.balance_USDT && el.balance_USDT > 0
+                      ? `${el.balance_USDT} USDt`
+                      : ""}
+                  </p>
+                )}
+
+                {el.Status_opened === "unopened" && <p>Unopened</p>}
+                {/* <p className="w-1/4">{el.Status_opened || "-"}</p> */}
+              </div>
+            );
+          })}
       </div>
     </main>
   );

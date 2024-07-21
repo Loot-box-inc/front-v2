@@ -15,26 +15,30 @@ export const useUserBalance = ({ initData }: useUserBalanceProps) => {
     const run = async () => {
       // get startParam lootbox - parent and sender
 
-      const [lootbox, usersLootboxes] = await Promise.all([
-        supabase
-          .from("lootboxes")
-          .select()
-          .eq("id", initData?.startParam as string),
-        supabase
-          .from("lootboxes")
-          .select("balance")
-          .eq("receiver_id", initData?.user?.id as number),
-      ]);
+      // const [lootbox, usersLootboxes] = await Promise.all([
+      //   supabase
+      //     .from("lootboxes")
+      //     .select()
+      //     .eq("id", initData?.startParam as string),
+      //   supabase
+      //     .from("lootboxes")
+      //     .select("balance")
+      //     .eq("receiver_id", initData?.user?.id as number),
+      // ]);
 
-      const { data } = lootbox;
-
-      // @ts-expect-error - to lazy to fix now
-      const { sender_id, parent } = data[0];
-
-      await supabase
+      const usersLootboxes = await supabase
         .from("lootboxes")
-        .update({ receiver_id: sender_id }) // sender of current lootbox
-        .eq("id", parent as string); // условие - parent lootbox
+        .select("balance")
+        .eq("receiver_id", initData?.user?.id as number);
+
+      // const { data } = lootbox;
+
+      // const { sender_id, parent } = data[0];
+
+      // await supabase
+      //   .from("lootboxes")
+      //   .update({ receiver_id: sender_id }) // sender of current lootbox
+      //   .eq("id", parent as string); // условие - parent lootbox
 
       if (!usersLootboxes?.data?.length) {
         setLootboxesCount(0);

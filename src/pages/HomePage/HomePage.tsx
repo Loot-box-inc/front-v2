@@ -96,10 +96,10 @@ export function HomePage() {
           // );
         }
 
-        await supabase
-          .from("lootboxes")
-          .update({ receiver_id: sender_id }) // sender of current lootbox
-          .eq("uuid", initData?.user?.id as number);
+        // await supabase
+        //   .from("lootboxes")
+        //   .update({ receiver_id: sender_id }) // sender of current lootbox
+        //   .eq("uuid", initData?.user?.id as number);
 
         if (!usersOpenedLootboxes?.data?.length) {
           // setIsLoading(false);
